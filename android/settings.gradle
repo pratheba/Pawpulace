@@ -1,0 +1,3 @@
+rootProject.name = 'BreederRegistration'
+
+include ':app'
