@@ -34,6 +34,35 @@ const toolBarStyle = {
     },
 };
 
+const navigationBarStyle={
+    container: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems:'center',
+        alignSelf:'center',
+        flex:-1,
+        height:50,
+        backgroundColor:'green',
+    },
+
+    leftNavButtonText: {
+    fontSize: 18,
+    marginLeft:10,
+    alignItems:'center'
+  },
+  rightNavButtonText: {
+    fontSize: 18,
+    marginRight:10,
+    alignItems:'center'
+  },
+
+  title: {
+    fontSize:16,
+    alignItems:'center'
+  },
+
+}
+
 const pageStyle = {
     content: {
         flex:1,
@@ -41,9 +70,17 @@ const pageStyle = {
     },
 };
 
+const mainStyle = {
+  mainContainer: {
+    flex: 1,
+  },
+};
+
 const CommonStyles = NestedStyleSheet(StyleSheet,{
         ToolBarStyle: toolBarStyle,
         PageStyle: pageStyle,
+        MainStyle: mainStyle,
+        NavigationBarStyle: navigationBarStyle,
  });
 
 module.exports = CommonStyles;

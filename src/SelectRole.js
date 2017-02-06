@@ -12,24 +12,30 @@ import {
     StyleSheet,
     Text,
     View,
-    NavigatorIOS,
+    Navigator,
     Image,
     TouchableHighlight,
     TextInput,
+    TouchableOpacity
 } from 'react-native';
 
 import { Col, Row, Grid } from "react-native-easy-grid";
 
 
 const BreederStyle = require('../style/BreederStyleSheet');
-const ToolbarStyle = require('../style/commonStyles');
+const CommonStyle = require('../style/commonStyles');
 const HomePageStyle= require('../style/HomePageStyle');
 
 
+import BreederRegistrationPage from './BreederRegistration';
+import PetParentRegistrationPage from './BreederRegistration';
+import FosterParentRegistrationPage from './BreederRegistration';
+
 class ToggleButton extends Component {
+
     render() {
         return (
-        <TouchableHighlight underlayColor='rgba(73,182,77,0.9)' style={BreederStyle.ImageStyle.bubbleImage} onPress={this.props.onPress}>
+        <TouchableHighlight underlayColor='rgba(73,182,77,0.9)' style={BreederStyle.ImageStyle.bubbleImage} onPress={this.props.onPress}  >
             
             <Image style={BreederStyle.ImageStyle.bubbleImage} source={this.props.source}>
 
@@ -44,33 +50,58 @@ class ToggleButton extends Component {
     }
 }
 
-class BreederRegistration extends Component {
-    render() {
+class BreedType extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+
+ render() {
         return (
+      <Text style={{paddingTop:100, color:'red'}}> hi </Text>
+    )};
+}
+
+class BreederRegistration1 extends React.Component {
+     onPressNext() {
+        this.props.navigator.push({
+        component: BreedType,
+        BreederName: 'hi',
+      })
+  }
+
+    render() {
+        return(
             <View>
-            <Text>'Hi Breeder' </Text>
+                  <ToggleButton label='Breeder'  onPress={() => { this.onPressNext() }}  />
             </View>
-            );
+      );
     }
 }
 
-class PetParentRegistration extends Component {
+
+
+class BreederRegistration extends React.Component {
+
     render() {
         return (
-            <View>
-            <Text>'Hi Pet Parent' </Text>
-            </View>
-            );
+             <Common component={BreederRegistration1} name='BreederRegistration1'/>
+        );
+    }
+}
+
+class PetParentRegistration extends React.Component {
+     render() {
+        return(
+        <PetParentRegistrationPage navigator={this.props.navigator}/>
+        );
     }
 }
 
 class FosterParentRegistration extends Component {
     render() {
-        return (
-            <View>
-            <Text>'Hi Foster Parent' </Text>
-            </View>
-            );
+        return(
+        <FosterParentRegistrationPage navigator={navigator} />
+        );
     }
 }
 
@@ -83,50 +114,66 @@ class ButtonRole extends Component {
             PetParent: false,
             FosterParent: false,
         };
+
         this.breederImage = require('../assets/face.png');
         this.petParentImage =  require('../assets/face.png');
         this.fosterParentImage = require('../assets/face.png');
     }
 
-     static propTypes = {
-        title: PropTypes.string.isRequired,
+     /*static propTypes = {
+        name: PropTypes.string.isRequired,
         navigator: PropTypes.object.isRequired,
-    }
+    }*/
 
-    _handleHomePress() {
-        this.props.navigator.pop();
-    }
-
-    updateChoice(type) {
+    updateChoice(type, property) {
         let newState = {...this.state};
         newState[type] = !newState[type];
         this.setState(newState);
         this.onButtonPress(type);
     }
 
-    onButtonPress(type){
-        switch(type) {
-            case 'Breeder':
-                this.props.navigator.push({
-                    component: BreederRegistration,
-                    title:'Welcome Breeder',
-                })
-            case 'PetParent':
-                this.props.navigator.push({
-                    component: PetParentRegistration,
-                    title: 'Welcome Parent',
-                })
-            case 'FosterParent':
-                this.props.navigator.push({
-                    component: FosterParentRegistration,
-                     title: 'Welcome Foster Parent',
-                })
-        }
+    resetState() {
+        this.state = {
+            Breeder: false,
+            PetParent: false,
+            FosterParent: false,
+        };
     }
 
-    render() {
-        return (
+    onButtonPress(type){
+            if(type == 'Breeder') { 
+                this.props.navigator.push({
+                    component: BreederRegistration,
+                    name: 'BreederRegistration',
+                    passProperty: {
+                        name: type
+                    }
+                })
+            }
+            if(type == 'PetParent'){
+                this.props.navigator.push({
+                    component: BreederRegistration,
+                    navigator: this.props.navigator,
+                    name: 'PetParentRegistration',
+                    passProperty: {
+                        name: type
+                    }
+                })
+            }
+            if(type == 'FosterParent'){
+                this.props.navigator.push({
+                     component: BreederRegistration,
+                     name: 'FosterParentRegistration',
+                     passProperty: {
+                        name: type
+                    }
+                })
+            }
+        }
 
+    render() {
+
+        return (
             <Grid style={{paddingTop:20, paddingBottom:20, paddingLeft:20, paddingRight:20}}>
                   <Row>
                         <Col>
@@ -145,14 +192,16 @@ class ButtonRole extends Component {
                         <Col></Col>
                   </Row>
             </Grid>
+
             );
     }
 }
 
 class HomeView extends Component {
-   static propTypes = {
+   /*static propTypes = {
       navigator: PropTypes.object.isRequired,
-    }
+      name: PropTypes.string.isRequired,
+    }*/
 
     render() {
         return (
@@ -163,32 +212,88 @@ class HomeView extends Component {
                                 <Text style={HomePageStyle.PageStyle.chooseRoleTitleText}>
                                       Are you a:
                                 </Text>
-                                <ButtonRole navigator={this.props.navigator} />
-
+                                <ButtonRole navigator={this.props.navigator} name={this.props.name} />
                             </View>
                         </View>
-                    </View>
+            </View>
+        );
+    }
+}
+
+class Common extends Component {
+
+    constructor(props) {
+        super(props);
+    }
+
+    renderScene(route, navigator) {
+        return <route.component navigator={navigator} {...route.passProperty} />
+    }
+
+    configureScene(route, routeStack) {
+            return Navigator.SceneConfigs.PushFromRight
+    }
+
+    render() {
+        return (
+            <Navigator
+                    configureScene={ this.configureScene }
+                    style={CommonStyle.MainStyle.mainContainer}
+                    renderScene = {this.renderScene}
+                    initialRoute={{ component: this.props.component,  name:this.props.name}}
+                    navigationBar = {
+                        <Navigator.NavigationBar style = {CommonStyle.NavigationBarStyle.container}
+                            routeMapper = {NavigationBarRouteMapper} {...this.props}/>
+                    } >
+            </Navigator>
         );
     }
 }
 
 export default class SelectRole extends Component {
 
-    static propTypes = {
-      title: PropTypes.string.isRequired,
+    renderScene(route, navigator) {
+        return <route.component navigator={navigator} {...route.passProperty} />
+    }
+
+    configureScene(route, routeStack) {
+            return Navigator.SceneConfigs.PushFromRight
     }
 
     render() {
         return (
-            <NavigatorIOS ref='nav'
-                    initialRoute={{
-                    component: HomeView,
-                    title: 'Home',
-                    }}
-                    style={{flex: 1}}
-            />
+            <Common component={HomeView} name='home'/>
         );
     }
+}
+
+
+var NavigationBarRouteMapper = {
+    
+    LeftButton(route, navigator, index, navState) {
+            if(index > 0) {
+                  return (
+                    <TouchableHighlight underlayColor="transparent" onPress={() => { if (index > 0) { navigator.pop() } }}>
+                      <Text style={ CommonStyle.NavigationBarStyle.leftNavButtonText }> Back </Text>
+                    </TouchableHighlight>
+            )} 
+            else { return null }
+    },
+
+  RightButton(route, navigator, index, navState) {
+    if (route.onPress) {
+        return ( 
+            <TouchableHighlight onPress={ () => route.onPress() }>
+                <Text style={ CommonStyle.NavigationBarStyle.rightNavButtonText }> { route.rightText || 'Right Button' }
+                 </Text>
+            </TouchableHighlight> 
+            )
+    }
+  },
+
+  Title(route, navigator, index, navState) {
+    return <Text style={ CommonStyle.NavigationBarStyle.title }>{route.name}</Text>
+  }
 }
 
 

@@ -17,10 +17,9 @@ const {
 
 const pageStyle = {
     container: {
-        justifyContent: 'center',
-        alignItems: 'center',
+        flex:1,
         backgroundColor:'#F5FCFF',
-        paddingTop:30,
+        justifyContent: 'center',
         paddingBottom:30,
         paddingLeft:20,
         paddingRight:20,

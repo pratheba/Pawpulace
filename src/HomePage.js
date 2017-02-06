@@ -21,7 +21,7 @@ const SelectRole = require('./SelectRole');
 export default class HomePage extends React.Component {
       render() {
             return (
-               <View style= {styles.mainContainer}>
+               <View style= {CommonStyles.MainStyle.mainContainer}>
                     
                     <View style={CommonStyles.ToolBarStyle.toolbar}>
                         <Text style={CommonStyles.ToolBarStyle.toolbarTitle}>Pawpulace</Text>
@@ -31,11 +31,5 @@ export default class HomePage extends React.Component {
     );
   }
 }
-
-const styles = StyleSheet.create({
-  mainContainer: {
-    flex: 1,
-  },
-});
 
 AppRegistry.registerComponent('HomePage', () => HomePage);
