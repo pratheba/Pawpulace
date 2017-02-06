@@ -14,6 +14,7 @@ import {
   ScrollView,
   Text,
   Button,
+  Image,
   Keyboard,
   TouchableHighlight,
   View
@@ -21,8 +22,10 @@ import {
 
 const BreederStyle = require('../style/BreederStyleSheet');
 const CommonStyles = require('../style/commonStyles');
+
 import TextField from 'react-native-md-textinput';
 
+import {CustomButton,CommonNavigator} from './util';
 
 class BreedType extends React.Component {
   constructor(props) {
@@ -31,10 +34,14 @@ class BreedType extends React.Component {
 
  render() {
         return (
-      <Text> {passProperty.BreederName} </Text>
+        <View style = {BreederStyle.PageStyle.container}>
+          <ScrollView contentContainerStyle={BreederStyle.PageStyle.container}>
+              <TextField label={this.props.BreederName}  highlightColor={'#00BCD4'} />
+              <TextField label={'Last Name'}  highlightColor={'#00BCD4'} />
+          </ScrollView>
+          </View>
     )};
 }
-
 
 
 class BreederInformation extends React.Component {
@@ -49,7 +56,6 @@ class BreederInformation extends React.Component {
         address: ' ',
         myNumber:0
       }
-      this.handleOnChangeText = this.handleOnChangeText.bind(this);
     }
 
 
@@ -87,81 +93,56 @@ class BreederInformation extends React.Component {
 
   onPressNext() {
       this.props.navigator.push({
-        component: BreedType,
-        BreederName: this.getState('firstName'),
-        passProperty: {
-          BreederName: this.getState('firstName')
-        }
+        component: BreedType
+        
       })
   }
 
-  handleOnChangeText(event,type) {
-    if(type == 'firstName')
-      this.setState({firstName: event.target.value});
-
-    if(type == 'lastName')
-      this.setState({lastName: event.target.value});
-
-    if(type == 'phoneNumber')
-      this.setState({phoneNumber: event.target.value});
-
-    if(type == 'email')
-      this.setState({email: event.target.value});
-
-    if(type == 'address')
-      this.setState({address: event.target.value});
+  onPressNext() {
+      this.props.navigator.push({
+        component: BreedType,
+        name: 'Welcome ' + this.state.firstName,
+        BreederName: this.state.firstName,
+        passProperty: {
+          BreederName: this.state.firstName
+        }
+      })
   }
 
   render() {
   return(
      <View style = {BreederStyle.PageStyle.container}>
           <ScrollView contentContainerStyle={BreederStyle.PageStyle.container}>
-              <TextField label={'First Name'} onChange={this.handleOnChangeText('firstName')} highlightColor={'#00BCD4'} />
-              <TextField label={'Last Name'} onChange={this.handleOnChangeText('lastName')} highlightColor={'#00BCD4'} />
-              <TextField label={'Email'} onChange={this.handleOnChangeText('email')} highlightColor={'#00BCD4'} keyboardType={'email-address'}/>
+              <TextField label={'First Name'}  onChangeText={(firstName) => this.setState({firstName})} value={this.state.firstName==' '?'':this.state.firstName}  highlightColor={'#00BCD4'} />
+              <TextField label={'Last Name'}  onChangeText={(lastName) => this.setState({lastName})} value={this.state.lastName==' '?'':this.state.lastName} highlightColor={'#00BCD4'} />
+              <TextField label={'Email'}  onChangeText={(email) => this.setState({email})} value={this.state.email==' '?'':this.state.email} highlightColor={'#00BCD4'} keyboardType={'email-address'}  />
               <TextField label={'Phone Number'} 
-                                onChange={this.handleOnChangeText('phoneNumber')}
+                                onChangeText={(phoneNumber) => this.setState({phoneNumber})} value={this.state.phoneNumber==' '?'':this.state.phoneNumber}
                                 highlightColor={'#00BCD4'} 
                                 keyboardType={'numeric'} 
                                 maxLength={10}
                                 onSubmitEditing={Keyboard.dismiss}
-                                /*onChangeText = {(text) => {this.onChange(text)}}*/
-                                /*value = {this.state.myNumber} *//>
-              <TextField label={'Address'} onChange={this.handleOnChangeText('address')} highlightColor={'#00BCD4'} multiline={true}/>
+                                /*onChangeText = {(text) => {this.onChange(text)}}
+                                value = {this.state.myNumber} */
+                                />
+              <TextField label={'Address'} onChangeText={(address) => this.setState({address})} value={this.state.address==' '?'':this.state.address}  highlightColor={'#00BCD4'} multiline={true}/>
             </ScrollView>
-            <Button
-                  navigator={this.props.navigator}
-                  onPress={this.onPressNext}
-                  title="Next"
-                  color="#841584"
-                  accessibilityLabel="Learn more about this purple button"
-                /> 
-                </View>
-            )
+            <CustomButton  navigator={this.props.navigator} onPress={() => {this.onPressNext()}} label='Next'/>
+            </View>
+          )
       }
 }
 
-export default class BreederRegistration extends React.Component {
-    onPressNext() {
-      this.props.navigator.push({
-        component: BreedType,
-        BreederName: 'hi',
-        passProperty: {
-          BreederName: this.getState('firstName')
-        }
-      })
-  }
+export default class BreederRegistrationPage extends React.Component {
 
-    render() {
-        return(
-          <TouchableHighlight navigator={this.props.navigator} underlayColor='rgba(73,182,77,0.9)'  onPress={this.onPressNext}  >
-          <View >
-                    <Text style={{ paddingTop:100}}>Next</Text>
-                </View>
-          </TouchableHighlight>
-      );
-    }
+
+  render() {
+      return(
+         /* <CommonNavigator component={BreederInformation} name='BreederInformation'/>*/
+       <BreederInformation  navigator={this.props.navigator} />
+      )
+  }
 }
 
 
-module.exports = BreederRegistration;
+module.exports =  BreederRegistrationPage;

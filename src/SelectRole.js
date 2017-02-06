@@ -30,6 +30,8 @@ const HomePageStyle= require('../style/HomePageStyle');
 import BreederRegistrationPage from './BreederRegistration';
 import PetParentRegistrationPage from './BreederRegistration';
 import FosterParentRegistrationPage from './BreederRegistration';
+import {CommonNavigator} from './util'
+
 
 class ToggleButton extends Component {
 
@@ -81,10 +83,10 @@ class BreederRegistration1 extends React.Component {
 
 
 class BreederRegistration extends React.Component {
-
     render() {
         return (
-             <Common component={BreederRegistration1} name='BreederRegistration1'/>
+            <BreederRegistration1 navigator={this.props.navigator}/> 
+            /* <CommonNavigator component={BreederRegistration1} name='BreederRegistration1'/>*/
         );
     }
 }
@@ -92,7 +94,7 @@ class BreederRegistration extends React.Component {
 class PetParentRegistration extends React.Component {
      render() {
         return(
-        <PetParentRegistrationPage navigator={this.props.navigator}/>
+            <BreederRegistrationPage navigator={this.props.navigator}/>
         );
     }
 }
@@ -152,8 +154,7 @@ class ButtonRole extends Component {
             }
             if(type == 'PetParent'){
                 this.props.navigator.push({
-                    component: BreederRegistration,
-                    navigator: this.props.navigator,
+                    component: PetParentRegistration,
                     name: 'PetParentRegistration',
                     passProperty: {
                         name: type
@@ -220,36 +221,6 @@ class HomeView extends Component {
     }
 }
 
-class Common extends Component {
-
-    constructor(props) {
-        super(props);
-    }
-
-    renderScene(route, navigator) {
-        return <route.component navigator={navigator} {...route.passProperty} />
-    }
-
-    configureScene(route, routeStack) {
-            return Navigator.SceneConfigs.PushFromRight
-    }
-
-    render() {
-        return (
-            <Navigator
-                    configureScene={ this.configureScene }
-                    style={CommonStyle.MainStyle.mainContainer}
-                    renderScene = {this.renderScene}
-                    initialRoute={{ component: this.props.component,  name:this.props.name}}
-                    navigationBar = {
-                        <Navigator.NavigationBar style = {CommonStyle.NavigationBarStyle.container}
-                            routeMapper = {NavigationBarRouteMapper} {...this.props}/>
-                    } >
-            </Navigator>
-        );
-    }
-}
-
 export default class SelectRole extends Component {
 
     renderScene(route, navigator) {
@@ -262,38 +233,9 @@ export default class SelectRole extends Component {
 
     render() {
         return (
-            <Common component={HomeView} name='home'/>
+            <CommonNavigator component={HomeView} name='home'/>
         );
     }
-}
-
-
-var NavigationBarRouteMapper = {
-    
-    LeftButton(route, navigator, index, navState) {
-            if(index > 0) {
-                  return (
-                    <TouchableHighlight underlayColor="transparent" onPress={() => { if (index > 0) { navigator.pop() } }}>
-                      <Text style={ CommonStyle.NavigationBarStyle.leftNavButtonText }> Back </Text>
-                    </TouchableHighlight>
-            )} 
-            else { return null }
-    },
-
-  RightButton(route, navigator, index, navState) {
-    if (route.onPress) {
-        return ( 
-            <TouchableHighlight onPress={ () => route.onPress() }>
-                <Text style={ CommonStyle.NavigationBarStyle.rightNavButtonText }> { route.rightText || 'Right Button' }
-                 </Text>
-            </TouchableHighlight> 
-            )
-    }
-  },
-
-  Title(route, navigator, index, navState) {
-    return <Text style={ CommonStyle.NavigationBarStyle.title }>{route.name}</Text>
-  }
 }
 
 
