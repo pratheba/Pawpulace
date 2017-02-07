@@ -12,6 +12,7 @@ import {
   NavigatorIOS,
   Navigator,
   ScrollView,
+  ListView,
   Text,
   Button,
   Image,
@@ -20,28 +21,149 @@ import {
   View
 } from 'react-native';
 
+import Menu, { MenuContext, MenuOptions, MenuOption, MenuTrigger } from 'react-native-menu';
+
 const BreederStyle = require('../style/BreederStyleSheet');
 const CommonStyles = require('../style/commonStyles');
 
 import TextField from 'react-native-md-textinput';
 
-import {CustomButton,CommonNavigator} from './util';
+import {CustomButton,CommonNavigator, DropDown} from './util';
 
-class BreedType extends React.Component {
+
+
+
+var BreedTypeList = React.createClass ({
+  render(){
+    return(
+      <View>
+              {
+            list.map((item, index) => {
+              return (
+                <MenuOptions key={index} > 
+                  <Text>{item}</Text>
+                </MenuOptions>
+              )
+            })
+      }
+      </View>
+
+    )
+    }
+});
+
+
+const TopNavigation = () => (
+  <View style={styles.content}>
+
+          <Menu style={styles.dropdown} onSelect={(value) => this.setState({ dropdownSelection: value })}>
+            <MenuTrigger>
+              <Text>hello</Text>
+            </MenuTrigger>
+            
+            <MenuOptions optionsContainerStyle={styles.dropdownOptions}
+                         renderOptionsContainer={(options) => <ScrollView><Text>CHOOSE SOMETHING....</Text>{options}</ScrollView>}>
+              <BreedTypeList/>
+            </MenuOptions>
+          </Menu>
+        </View>
+);
+
+
+class BreedType extends Component {
+
   constructor(props) {
     super(props);
+    this.state = {
+      breedTypes: ['Labrador retriever', 'Golden Retriever' , 'Other']
+    }
   }
 
- render() {
-        return (
-        <View style = {BreederStyle.PageStyle.container}>
-          <ScrollView contentContainerStyle={BreederStyle.PageStyle.container}>
-              <TextField label={this.props.BreederName}  highlightColor={'#00BCD4'} />
-              <TextField label={'Last Name'}  highlightColor={'#00BCD4'} />
-          </ScrollView>
-          </View>
-    )};
+  render() {
+    return (
+      <DropDown dropdownSelection='BreedType'  dropdownlists={this.state.breedTypes} />
+    );
+  }
 }
+
+/*
+class BreedType extends Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      breedTypes: ['Labrador retriever', 'Golden Retriever' , 'Other']
+    }
+
+    const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+    this.state = {
+      dataSource: ds.cloneWithRows(['row 1', 'row 2']),
+    };
+  }
+  render() {
+    return (
+      <ListView
+        style={{flex:1, paddingTop: 100}}
+        dataSource={this.state.dataSource}
+        renderRow={(data) => <View><Text>{data}</Text></View>}
+      />
+    );
+  }
+}
+*/
+
+
+const styles = StyleSheet.create({
+  topbar: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    backgroundColor: 'black',
+    paddingHorizontal: 5,
+    paddingVertical: 10
+  },
+  menuTrigger: {
+    flexDirection: 'row',
+    paddingHorizontal: 10
+  },
+  menuTriggerText: {
+    color: 'lightgrey',
+    fontWeight: '600',
+    fontSize: 20
+  },
+  disabled: {
+    color: '#ccc'
+  },
+  divider: {
+    marginVertical: 5,
+    marginHorizontal: 2,
+    borderBottomWidth: 1,
+    borderColor: '#ccc'
+  },
+  content: {
+    backgroundColor: 'white',
+    paddingHorizontal: 10,
+    paddingTop: 20,
+    paddingBottom: 30,
+    borderBottomWidth: 1,
+    borderColor: '#ccc'
+  },
+  contentText: {
+    fontSize: 18
+  },
+  dropdown: {
+    width: 300,
+    borderColor: '#999',
+    borderWidth: 1,
+    padding: 5
+  },
+  dropdownOptions: {
+    marginTop: 30,
+    borderColor: '#ccc',
+    borderWidth: 2,
+    width: 300,
+    height: 200
+  }
+});
 
 
 class BreederInformation extends React.Component {

@@ -6,14 +6,15 @@ import {
     Button,
     Image,
     StyleSheet,
+     ScrollView,
     TouchableHighlight
 } from 'react-native';
 
 import AwesomeButton from 'react-native-awesome-button';
-
-
 const CommonStyle = require('../style/commonStyles');
 const BreederStyle = require('../style/BreederStyleSheet');
+
+
 
 export class CommonNavigator extends Component {
 
@@ -73,9 +74,15 @@ var NavigationBarRouteMapper = {
   }
 }
 
+
+
+
+
+
+
+
+
 export class CustomButton extends React.Component {
-
-
     render() {
         return (
             <Button
@@ -92,11 +99,61 @@ export class CustomButton extends React.Component {
                                       backgroundColor: '#1155DD'
                                     }
                                    }} />
-      </View>*/
-  
+           </View>*/
         );
     }
 }
+
+
+
+
+
+
+
+
+
+
+import Menu, { MenuContext, MenuOptions, MenuOption, MenuTrigger } from 'react-native-menu';
+export class DropDown extends React.Component {
+
+    constructor(props) {
+        super(props);
+
+      
+    }
+
+  render(){
+ 
+        return(
+            
+                <MenuContext style={{ flex: 1 }} ref="MenuContext">
+                <View style={styles.content}>
+                    <Menu style={styles.dropdown} >
+                        <MenuTrigger>
+                          <Text>{this.props.dropdownSelection}</Text>
+                        </MenuTrigger>
+                        <MenuOptions optionsContainerStyle={styles.dropdownOptions}
+                                             renderOptionsContainer={(options) => <ScrollView><Text>Choose...</Text>{options}</ScrollView>}>
+                                  <View>
+                                  {
+                                    
+                                this.props.dropdownlists.map((item, index) => {
+                                  return (
+                                            <MenuOptions key={index} > 
+                                                <Text>{item}</Text>
+                                            </MenuOptions>
+                                  )
+                                })
+                                  }
+                              </View>
+                       </MenuOptions>
+                    </Menu>
+                                </View>
+                </MenuContext>
+        )
+    }
+}
+
 
 
 const styles = StyleSheet.create({
@@ -117,6 +174,56 @@ const styles = StyleSheet.create({
   },
   loginButtonLabel: {
     color: 'white'
+  },
+
+  topbar: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    backgroundColor: 'black',
+    paddingHorizontal: 5,
+    paddingVertical: 10
+  },
+  menuTrigger: {
+    flexDirection: 'row',
+    paddingHorizontal: 10
+  },
+  menuTriggerText: {
+    color: 'lightgrey',
+    fontWeight: '600',
+    fontSize: 20
+  },
+  disabled: {
+    color: '#ccc'
+  },
+  divider: {
+    marginVertical: 5,
+    marginHorizontal: 2,
+    borderBottomWidth: 1,
+    borderColor: '#ccc'
+  },
+  content: {
+    backgroundColor: 'white',
+    paddingHorizontal: 10,
+    paddingTop: 100,
+    paddingBottom: 30,
+    borderBottomWidth: 1,
+    borderColor: '#ccc'
+  },
+  contentText: {
+    fontSize: 18
+  },
+  dropdown: {
+    width: 300,
+    borderColor: '#999',
+    borderWidth: 1,
+    padding: 5
+  },
+  dropdownOptions: {
+    marginTop: 30,
+    borderColor: '#ccc',
+    borderWidth: 2,
+    width: 300,
+    height: 200
   }
 })
 
